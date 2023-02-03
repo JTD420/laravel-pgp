@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "jtd420/laravel-pgp",
+    "description": "Automatic PGP Encryption/Decryption for your laravel application. Fully customisable and works out-the-box with the default provided scaffolding!",
     "keywords": [
-        ":vendor_name",
+        "JTD420",
         "laravel",
-        ":package_slug"
+        "laravel-pgp"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/jtd420/laravel-pgp",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Brad",
+            "email": "JTD420@h4xr0x.com",
             "role": "Developer"
         }
     ],
@@ -35,13 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "JTD420\\PGP\\": "src",
+            "JTD420\\PGP\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "JTD420\\PGP\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -61,10 +61,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "JTD420\\PGP\\PGPServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "PGP": "JTD420\\PGP\\Facades\\PGP"
             }
         }
     },

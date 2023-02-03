@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace JTD420\PGP\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class PGPCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-pgp';
 
     public $description = 'My command';
 
