@@ -2,9 +2,9 @@
 
 namespace JTD420\PGP;
 
+use JTD420\PGP\Commands\PGPCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use JTD420\PGP\Commands\PGPCommand;
 
 class PGPServiceProvider extends PackageServiceProvider
 {
