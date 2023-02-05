@@ -23,7 +23,7 @@ class PGPServiceProvider extends PackageServiceProvider
             ->hasTranslations()
             ->hasAssets()
             ->hasMigration('create_laravel-pgp_table')
-            ->hasMigration('create_PGP_tables')
+            ->hasMigration('create_pgp_keys_table')
             ->hasRoute('web')
             ->hasCommand(PGPCommand::class)
             ->hasInstallCommand(function (InstallCommand $command) {
