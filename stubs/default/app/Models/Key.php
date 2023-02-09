@@ -20,5 +20,4 @@ class Key extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }
