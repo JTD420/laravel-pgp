@@ -42,8 +42,18 @@ trait InstallsPGPStack
         // Tests...
         //$this->installTests();
 
+        // Append Include of PGP Routes to Existing routes/web.php File...
+        $existingRoutes = file_get_contents(base_path('routes/web.php')); // Read the contents of the existing routes/web.php file into a string
+        $stubRoutes = file_get_contents(__DIR__ . '/../../stubs/default/routes/web.php'); // Read the contents of your stub file into a string
+        $combinedRoutes = $existingRoutes . PHP_EOL . $stubRoutes; // Concatenate the contents of the two files
+        file_put_contents(base_path('routes/web.php'), $combinedRoutes); // Write the combined contents back to the routes/web.php file
+
+
         // Routes...
-        copy(__DIR__ . '/../../stubs/default/routes/web.php', base_path('routes/web.php'));
+        if (!file_exists(base_path('routes/pgp.php'))) {
+            copy(__DIR__ . '/../../stubs/default/routes/pgp.php', base_path('routes/pgp.php'));
+        }
+
         //copy(__DIR__.'/../../stubs/default/routes/auth.php', base_path('routes/auth.php'));
 
         // "Dashboard" Route...
