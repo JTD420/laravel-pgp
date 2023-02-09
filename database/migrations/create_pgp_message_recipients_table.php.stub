@@ -1,0 +1,24 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create(config('PGP.table_prefix') . 'message_recipients', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('conversation_id');
+            $table->unsignedBigInteger('recipient_id');
+            $table->text('encrypted_subject')->nullable();
+            $table->text('encrypted_message');
+            $table->boolean('is_trash')->default(false);
+            $table->boolean('is_read')->default(false);
+            $table->timestamps();
+            $table->foreign('conversation_id')->references('id')->on(config('PGP.table_prefix') . 'conversations');
+            $table->foreign('recipient_id')->references('id')->on('users');
+        });
+    }
+};
