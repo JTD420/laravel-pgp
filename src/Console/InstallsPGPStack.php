@@ -14,10 +14,9 @@ trait InstallsPGPStack
      */
     protected function installPGPStack()
     {
-
         // Controllers...
         (new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/default/app/Http/Controllers', app_path('Http/Controllers'));
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/default/app/Http/Controllers', app_path('Http/Controllers'));
 
         // Requests...
         //(new Filesystem)->ensureDirectoryExists(app_path('Http/Requests'));
@@ -27,7 +26,7 @@ trait InstallsPGPStack
         //(new Filesystem)->ensureDirectoryExists(resource_path('views'));
         //(new Filesystem)->copyDirectory(__DIR__.'/../../stubs/default/resources/views', resource_path('views'));
 
-        if (!$this->option('dark')) {
+        if (! $this->option('dark')) {
             $this->removeDarkClasses((new Finder)
                 ->in(resource_path('views'))
                 ->name('*.blade.php')
@@ -43,14 +42,13 @@ trait InstallsPGPStack
         //$this->installTests();
 
         // Routes...
-        copy(__DIR__ . '/../../stubs/default/routes/web.php', base_path('routes/web.php'));
+        copy(__DIR__.'/../../stubs/default/routes/web.php', base_path('routes/web.php'));
         //copy(__DIR__.'/../../stubs/default/routes/auth.php', base_path('routes/auth.php'));
 
         // "Dashboard" Route...
         //$this->replaceInFile('/home', '/dashboard', resource_path('views/welcome.blade.php'));
         //$this->replaceInFile('Home', 'Dashboard', resource_path('views/welcome.blade.php'));
         //$this->replaceInFile('/home', '/dashboard', app_path('Providers/RouteServiceProvider.php'));
-
 
         $this->components->info('Installing dependencies.');
 

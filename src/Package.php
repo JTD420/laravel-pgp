@@ -48,7 +48,7 @@ class Package
     {
         $configFileName = $configFileName ?? $this->shortName();
 
-        if (!is_array($configFileName)) {
+        if (! is_array($configFileName)) {
             $configFileName = [$configFileName];
         }
 
@@ -114,7 +114,7 @@ class Package
 
     public function hasViewComposer($view, $viewComposer): static
     {
-        if (!is_array($view)) {
+        if (! is_array($view)) {
             $view = [$view];
         }
 
@@ -197,7 +197,7 @@ class Package
             return $this->basePath;
         }
 
-        return $this->basePath . DIRECTORY_SEPARATOR . ltrim($directory, DIRECTORY_SEPARATOR);
+        return $this->basePath.DIRECTORY_SEPARATOR.ltrim($directory, DIRECTORY_SEPARATOR);
     }
 
     public function viewNamespace(): string
