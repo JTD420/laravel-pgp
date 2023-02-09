@@ -13,7 +13,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
-
 class InstallCommand extends Command
 {
     use InstallsPGPStack;
@@ -40,18 +39,17 @@ class InstallCommand extends Command
      */
     protected $stacks = ['blade'];
 
-
     public ?Closure $endWith = null;
 
     public $hidden = true;
 
     public function __construct(Package $package)
     {
-        $this->signature = $package->shortName() . ':install {stack : The development stack that should be installed (blade)}
+        $this->signature = $package->shortName().':install {stack : The development stack that should be installed (blade)}
                             {--dark : Indicate that dark mode support should be installed}
                             {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
 
-        $this->description = 'Install ' . $package->name;
+        $this->description = 'Install '.$package->name;
 
         $this->package = $package;
 
@@ -69,13 +67,13 @@ class InstallCommand extends Command
             $this->installPGPStack();
         } else {
             $this->components->error('Invalid stack. Currently supported stacks are [blade].');
-            die();
+            exit();
         }
 
         if ($this->shouldPublishConfigFile) {
             $this->comment('Publishing config file...');
 
-            $this->callSilently("vendor:publish", [
+            $this->callSilently('vendor:publish', [
                 '--tag' => "{$this->package->shortName()}-config",
             ]);
         }
@@ -83,7 +81,7 @@ class InstallCommand extends Command
         if ($this->shouldPublishMigrations) {
             $this->comment('Publishing migration...');
 
-            $this->callSilently("vendor:publish", [
+            $this->callSilently('vendor:publish', [
                 '--tag' => "{$this->package->shortName()}-migrations",
             ]);
         }
@@ -123,14 +121,15 @@ class InstallCommand extends Command
         if ($this->endWith) {
             ($this->endWith)($this);
         }
+
         return 1;
     }
 
     /**
      * Interact with the user to prompt them when the stack argument is missing.
      *
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param  \Symfony\Component\Console\Input\InputInterface  $input
+     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
      * @return void
      */
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -147,10 +146,8 @@ class InstallCommand extends Command
 
         $input->setOption('dark', $this->components->confirm('Would you like to install dark mode support?'));
 
-
         //$input->setOption('pest', $this->components->confirm('Would you prefer Pest tests instead of PHPUnit?'));
     }
-
 
     public function publishConfigFile(): self
     {
@@ -205,32 +202,32 @@ class InstallCommand extends Command
     {
         $providerName = $this->package->publishableProviderName;
 
-        if (!$providerName) {
+        if (! $providerName) {
             return $this;
         }
 
-        $this->callSilent('vendor:publish', ['--tag' => $this->package->shortName() . '-provider']);
+        $this->callSilent('vendor:publish', ['--tag' => $this->package->shortName().'-provider']);
 
         $namespace = Str::replaceLast('\\', '', $this->laravel->getNamespace());
 
         $appConfig = file_get_contents(config_path('app.php'));
 
-        $class = '\\Providers\\' . $providerName . '::class';
+        $class = '\\Providers\\'.$providerName.'::class';
 
-        if (Str::contains($appConfig, $namespace . $class)) {
+        if (Str::contains($appConfig, $namespace.$class)) {
             return $this;
         }
 
         file_put_contents(config_path('app.php'), str_replace(
             "Illuminate\\View\ViewServiceProvider::class,",
-            "Illuminate\\View\ViewServiceProvider::class," . PHP_EOL . "        {$namespace}\Providers\\" . $providerName . "::class,",
+            "Illuminate\\View\ViewServiceProvider::class,".PHP_EOL."        {$namespace}\Providers\\".$providerName.'::class,',
             $appConfig
         ));
 
-        file_put_contents(app_path('Providers/' . $providerName . '.php'), str_replace(
+        file_put_contents(app_path('Providers/'.$providerName.'.php'), str_replace(
             "namespace App\Providers;",
             "namespace {$namespace}\Providers;",
-            file_get_contents(app_path('Providers/' . $providerName . '.php'))
+            file_get_contents(app_path('Providers/'.$providerName.'.php'))
         ));
 
         return $this;
@@ -239,9 +236,9 @@ class InstallCommand extends Command
     /**
      * Replace a given string within a given file.
      *
-     * @param string $search
-     * @param string $replace
-     * @param string $path
+     * @param  string  $search
+     * @param  string  $replace
+     * @param  string  $path
      * @return void
      */
     protected function replaceInFile($search, $replace, $path)
@@ -252,7 +249,7 @@ class InstallCommand extends Command
     /**
      * Installs the given Composer Packages into the application.
      *
-     * @param mixed $packages
+     * @param  mixed  $packages
      * @return bool
      */
     protected function requireComposerPackages($packages)
@@ -268,7 +265,7 @@ class InstallCommand extends Command
             is_array($packages) ? $packages : func_get_args()
         );
 
-        return !(new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
+        return ! (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
             ->setTimeout(null)
             ->run(function ($type, $output) {
                 $this->output->write($output);
@@ -278,7 +275,7 @@ class InstallCommand extends Command
     /**
      * Run the given commands.
      *
-     * @param array $commands
+     * @param  array  $commands
      * @return void
      */
     protected function runCommands($commands)
@@ -289,19 +286,19 @@ class InstallCommand extends Command
             try {
                 $process->setTty(true);
             } catch (RuntimeException $e) {
-                $this->output->writeln('  <bg=yellow;fg=black> WARN </> ' . $e->getMessage() . PHP_EOL);
+                $this->output->writeln('  <bg=yellow;fg=black> WARN </> '.$e->getMessage().PHP_EOL);
             }
         }
 
         $process->run(function ($type, $line) {
-            $this->output->write('    ' . $line);
+            $this->output->write('    '.$line);
         });
     }
 
     /**
      * Remove Tailwind dark classes from the given files.
      *
-     * @param \Symfony\Component\Finder\Finder $finder
+     * @param  \Symfony\Component\Finder\Finder  $finder
      * @return void
      */
     protected function removeDarkClasses(Finder $finder)
