@@ -2,10 +2,7 @@
 
 namespace JTD420\PGP;
 
-use JTD420\PGP\Commands\PGPCommand;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
+use JTD420\PGP\Commands\InstallCommand;
 
 class PGPServiceProvider extends PackageServiceProvider
 {
@@ -17,15 +14,11 @@ class PGPServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('laravel-pgp')
+            ->name('PGP')
             ->hasConfigFile()
             ->hasViews()
-            ->hasTranslations()
-            ->hasAssets()
-            ->hasMigration('create_laravel-pgp_table')
             ->hasMigration('create_pgp_keys_table')
-            ->hasRoute('web')
-            ->hasCommand(PGPCommand::class)
+            ->hasMigration('create_pgp_messages_table')
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
                     ->publishConfigFile()
