@@ -23,6 +23,8 @@ class InstallCommand extends Command
 
     protected bool $shouldPublishConfigFile = false;
 
+    protected bool $askToPublishViewFiles = false;
+
     protected bool $shouldPublishMigrations = false;
 
     protected bool $askToRunMigrations = false;
@@ -76,6 +78,15 @@ class InstallCommand extends Command
             $this->callSilently('vendor:publish', [
                 '--tag' => "{$this->package->shortName()}-config",
             ]);
+        }
+
+        if ($this->askToPublishViewFiles) {
+            if ($this->confirm('Would you like to publish the view files for customization purposes?')) {
+                $this->comment('Publishing view files...');
+                $this->callSilently('vendor:publish', [
+                    '--tag' => "{$this->package->shortName()}-views",
+                ]);
+            }
         }
 
         if ($this->shouldPublishMigrations) {
@@ -159,6 +170,13 @@ class InstallCommand extends Command
     public function publishMigrations(): self
     {
         $this->shouldPublishMigrations = true;
+
+        return $this;
+    }
+
+    public function askToPublishViewFiles(): self
+    {
+        $this->askToPublishViewFiles = true;
 
         return $this;
     }
