@@ -20,5 +20,4 @@ Route::prefix("$prefix")->group(function () {
     Route::get('/PGP', function () {
         return view('PGP::welcome');
     });
-
 });
