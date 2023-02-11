@@ -18,48 +18,113 @@ Future updates will include ways to support this project and others.
 
 [<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Laravel.svg/1200px-Laravel.svg.png" width="419px" />](https://github.com/JTD420/laravel-pgp)
 
-
-
 ## Installation
 
-You can install the package via composer:
+You can require the package via composer:
 
 ```bash
 composer require jtd420/laravel-pgp
 ```
 
+### Installing the package
+
+To install the package into your Laravel application, you need to require it using composer and run the following
+Artisan command:
+
+```bash
+php artisan PGP::install blade
+```
+
+If you prefer a dark theme, the following command can be run instead with the `--dark` option:
+
+```bash
+php artisan PGP::install blade --dark
+```
+
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-pgp-migrations"
+php artisan vendor:publish --tag="PGP-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-pgp-config"
+php artisan vendor:publish --tag="PGP-config"
 ```
 
 This is the contents of the published config file:
 
 ```php
 return [
+    /*
+     * To prevent naming conflicts, this prefix will be added to all Laravel-PGP migrations.
+     */
+    'table_prefix' => 'pgp',
+
+    /*
+     * Prefix added to rest of Laravel-PGP code, including routes. (Delete default to remove prefix)
+     */
+    'prefix' => 'PGP',
+
+    /*
+     * Choose the layout file to be extended by the views provided in the package.
+     * The default layout file is set to 'layouts.app', but can be changed to match your preferred layout.
+     */
+    'layout_file' => 'layouts.app',
 ];
 ```
 
 Optionally, you can publish the views using
 
 ```bash
-php artisan vendor:publish --tag="laravel-pgp-views"
+php artisan vendor:publish --tag="PGP-views"
 ```
 
 ## Usage
 
+This package includes the PGPController class located at `App/Http/Controllers/PGPController` for users who want to
+understand the inner workings of the package and possibly modify it. However, if all you want is the default encrypted
+messaging functionality, there's no need for any additional setup. The package provides sensible defaults for easy use,
+as well as being highly customizable for those who want to extend it.
+
+To use the class and its methods, it must be imported into a controller and instantiated:
+
 ```php
-$PGP = new JTD420\PGP();
-echo $PGP->echoPhrase('Hello, JTD420!');
+use App\Http\Controllers\PGPController;
+$controller = new PGPController();
 ```
+
+### Generating a Keypair
+
+The `generate_keypair` method generates a public/private keypair and returns both the public and private key as
+enarmoured PGP keys.
+
+```php
+$keypair = $controller->generate_keypair('Name', 'email@email.com', 'RealSecurePassPhrase');
+$public_key = $keypair['public_key'];
+$private_key = $keypair['private_key'];
+```
+
+### Encrypting a Message
+
+The `encrypt` method takes a public key and a message and returns an encrypted enarmoured PGP message.
+
+```php
+$encrypted_message = $controller->encrypt($public_key, 'secret message');
+```
+
+### Decrypting a Message
+
+The `decrypt` method takes a private key, encrypted message and passphrase and returns either the decrypted message or a
+json error if decryption fails.
+
+```php
+$decrypted_message = $controller->decrypt($private_key, $encrypted_message, 'RealSecurePassPhrase');
+```
+
+For more, see the wiki [here!](https://github.com/JTD420/laravel-pgp/wiki#usage)
 
 ## Testing
 
