@@ -27,8 +27,9 @@ class AddUserModelChanges extends Command
         $modelPath = app_path('Models/User.php');
 
         // Check if the User model file exists
-        if (!file_exists($modelPath)) {
-            $this->error("User model file not found.");
+        if (! file_exists($modelPath)) {
+            $this->error('User model file not found.');
+
             return;
         }
 
@@ -41,14 +42,14 @@ class AddUserModelChanges extends Command
 
             // Add the protected $events property to the User model
             $eventsProperty = "\n    /**\n     * The event map for the model.\n     *\n     * @var array\n     */\n    protected \$events = [\n        'created' => UserCreatedEvent::class,\n    ];\n  \n";
-            $modelContents = str_replace("class User extends Authenticatable\n{\n", "class User extends Authenticatable\n{\n" . $eventsProperty, $modelContents);
+            $modelContents = str_replace("class User extends Authenticatable\n{\n", "class User extends Authenticatable\n{\n".$eventsProperty, $modelContents);
 
             // Save the changes to the User model file
             file_put_contents($modelPath, $modelContents);
 
-            $this->info("Changes to User model successfully added.");
+            $this->info('Changes to User model successfully added.');
         } else {
-            $this->warn("The presence of the use statement for UserCreatedEvent was detected in your User Model. To avoid duplicates, no modifications were made to it. If this is unexpected, try removing the statement and re-running the install command. If the issue persists, please open a Github issue for assistance.");
+            $this->warn('The presence of the use statement for UserCreatedEvent was detected in your User Model. To avoid duplicates, no modifications were made to it. If this is unexpected, try removing the statement and re-running the install command. If the issue persists, please open a Github issue for assistance.');
         }
     }
 }

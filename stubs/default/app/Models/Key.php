@@ -15,6 +15,7 @@ class Key extends Model
     protected $fillable = [
         'user_id', 'public_key', 'private_key',
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
