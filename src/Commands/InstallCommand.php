@@ -30,6 +30,7 @@ class InstallCommand extends Command
     protected bool $askToRunMigrations = false;
 
     protected bool $copyServiceProviderInApp = false;
+    protected bool $copyGravatarProviderInApp = false;
 
     protected ?string $starRepo = null;
 
@@ -65,7 +66,7 @@ class InstallCommand extends Command
         }
 
         if ($this->argument('stack') === 'blade') {
-            $this->requireComposerPackages('singpolyma/openpgp-php:^0.6.0');
+            $this->requireComposerPackages('singpolyma/openpgp-php:^0.6.0', 'creativeorange/gravatar:~1.0');
             $this->installPGPStack();
         } else {
             $this->components->error('Invalid stack. Currently supported stacks are [blade].');
@@ -109,6 +110,12 @@ class InstallCommand extends Command
             $this->comment('Publishing service provider...');
 
             $this->copyServiceProviderInApp();
+        }
+
+        if ($this->copyGravatarProviderInApp) {
+            $this->comment('Publishing Gravatar service provider...');
+
+            $this->copyGravatarProviderInApp();
         }
 
         if ($this->starRepo) {
@@ -195,6 +202,13 @@ class InstallCommand extends Command
         return $this;
     }
 
+    public function copyAndRegisterGravatarProviderInApp(): self
+    {
+        $this->copyGravatarProviderInApp = true;
+
+        return $this;
+    }
+
     public function askToStarRepoOnGitHub($vendorSlashRepoName): self
     {
         $this->starRepo = $vendorSlashRepoName;
@@ -242,21 +256,42 @@ class InstallCommand extends Command
             $appConfig
         ));
 
-        file_put_contents(app_path('Providers/'.$providerName.'.php'), str_replace(
+        file_put_contents(app_path('Providers/' . $providerName . '.php'), str_replace(
             "namespace App\Providers;",
             "namespace {$namespace}\Providers;",
-            file_get_contents(app_path('Providers/'.$providerName.'.php'))
+            file_get_contents(app_path('Providers/' . $providerName . '.php'))
         ));
 
         return $this;
     }
 
+
+    protected function copyGravatarProviderInApp(): self
+    {
+        $namespace = Str::replaceLast('\\', '', $this->laravel->getNamespace());
+        $appConfig = file_get_contents(config_path('app.php'));
+        $gravatarClass = 'Creativeorange\\Gravatar\\GravatarServiceProvider::class';
+
+        if (Str::contains($appConfig, $gravatarClass)) {
+            return $this;
+        }
+
+        file_put_contents(config_path('app.php'), str_replace(
+            "Illuminate\\View\\ViewServiceProvider::class,",
+            "Illuminate\\View\\ViewServiceProvider::class," . PHP_EOL . "        " . $gravatarClass . ',',
+            $appConfig
+        ));
+
+        return $this;
+    }
+
+
     /**
      * Replace a given string within a given file.
      *
-     * @param  string  $search
-     * @param  string  $replace
-     * @param  string  $path
+     * @param string $search
+     * @param string $replace
+     * @param string $path
      * @return void
      */
     protected function replaceInFile($search, $replace, $path)
@@ -283,7 +318,7 @@ class InstallCommand extends Command
             is_array($packages) ? $packages : func_get_args()
         );
 
-        return ! (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
+        return !(new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
             ->setTimeout(null)
             ->run(function ($type, $output) {
                 $this->output->write($output);
@@ -291,9 +326,39 @@ class InstallCommand extends Command
     }
 
     /**
+     * Update the "package.json" file.
+     *
+     * @param callable $callback
+     * @param bool $dev
+     * @return void
+     */
+    protected static function updateNodePackages(callable $callback, $dev = true)
+    {
+        if (!file_exists(base_path('package.json'))) {
+            return;
+        }
+
+        $configurationKey = $dev ? 'devDependencies' : 'dependencies';
+
+        $packages = json_decode(file_get_contents(base_path('package.json')), true);
+
+        $packages[$configurationKey] = $callback(
+            array_key_exists($configurationKey, $packages) ? $packages[$configurationKey] : [],
+            $configurationKey
+        );
+
+        ksort($packages[$configurationKey]);
+
+        file_put_contents(
+            base_path('package.json'),
+            json_encode($packages, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . PHP_EOL
+        );
+    }
+
+    /**
      * Run the given commands.
      *
-     * @param  array  $commands
+     * @param array $commands
      * @return void
      */
     protected function runCommands($commands)
