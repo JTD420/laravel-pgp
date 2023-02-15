@@ -21,15 +21,16 @@ trait ModelTrait
      */
     public function getTable()
     {
-        $this->table_prefix = config('PGP.table_prefix');
-
-        $model = explode('\\', get_class($this));
-        $model = Str::lower(array_pop($model));
-
-        if (! isset($this->table)) {
-            $this->setTable(Str::plural($this->table_prefix.$model));
+        if (class_basename($this) == 'User') {
+            return parent::getTable();
         }
 
+        $this->table_prefix = config('PGP.table_prefix');
+        $model = str::snake(class_basename($this));
+
+        if (!isset($this->table)) {
+            $this->setTable(Str::plural($this->table_prefix . $model));
+        }
         return $this->table;
     }
 }
