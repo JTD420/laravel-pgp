@@ -24,12 +24,10 @@ Route::prefix("$prefix")->group(function () {
     Route::post('/messages/{id}/reply', [MessageController::class, 'reply'])->name("$prefix.messages.reply");
     Route::get('/messages/send', [MessageController::class, 'encrypt'])->name("$prefix.messages.send");
     Route::match(['get', 'post'], '/messages/{id}/thread', [MessageController::class, 'show'])->name('viewThread');
-
-
 });
 if (config('PGP.uses_custom_auth')) {
     // Adds the login route without prefix if not already defined to avoid errors when redirecting users on session expiration.
-    if (!Route::has('login')) {
+    if (! Route::has('login')) {
         Route::get('/login', [AuthenticationController::class, 'login'])->name('login');
     }
     Route::prefix("$prefix")->group(function () {

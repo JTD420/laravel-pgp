@@ -34,5 +34,4 @@ class ReplyRecipient extends Model
     {
         return $this->latest()->pluck('created_at')->first();
     }
-
 }

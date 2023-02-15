@@ -11,7 +11,6 @@ class UserCreatedListener
     /**
      * Handle the event.
      *
-     * @param  UserCreatedEvent  $event
      * @return void
      */
     public function handle(UserCreatedEvent $event)
