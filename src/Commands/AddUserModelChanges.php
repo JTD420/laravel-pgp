@@ -24,10 +24,16 @@ class AddUserModelChanges extends Command
      */
     public function handle()
     {
+        /**
+         * This method updates the User model with necessary changes.
+         *
+         * @return void
+         */
+
         $modelPath = app_path('Models/User.php');
 
         // Check if the User model file exists
-        if (! file_exists($modelPath)) {
+        if (!file_exists($modelPath)) {
             $this->error('User model file not found.');
 
             return;
@@ -36,17 +42,23 @@ class AddUserModelChanges extends Command
         // Read the contents of the User model file
         $modelContents = file_get_contents($modelPath);
 
+        if (!str_contains($modelContents, "'username'")) {
+            $fillableRegex = '/protected\s+\$fillable\s*=\s*\[[^\]]+\]/m';
+            if (preg_match($fillableRegex, $modelContents, $matches)) {
+                $fillableArray = $matches[0];
+                $fillableArray = str_replace(']', "    'username',\n    ]", $fillableArray);
+                $modelContents = preg_replace($fillableRegex, $fillableArray, $modelContents);
+                file_put_contents($modelPath, $modelContents);
+                $this->info("Added 'username' to User model.");
+            }
+        }
+
         if (strpos($modelContents, "use JTD420\PGP\Events\UserCreatedEvent;") === false) {
-            // Add the use statement for the UserCreatedEvent class
-            $modelContents = str_replace("use Laravel\Sanctum\HasApiTokens;\n", "use Laravel\Sanctum\HasApiTokens;\nuse JTD420\PGP\Events\UserCreatedEvent;\n", $modelContents);
-
-            // Add the protected $events property to the User model
+            $modelContentsNew = str_replace("use Laravel\Sanctum\HasApiTokens;\n", "use Laravel\Sanctum\HasApiTokens;\nuse JTD420\PGP\Events\UserCreatedEvent;\n", $modelContents);
             $eventsProperty = "\n    /**\n     * The event map for the model.\n     *\n     * @var array\n     */\n    protected \$events = [\n        'created' => UserCreatedEvent::class,\n    ];\n  \n";
-            $modelContents = str_replace("class User extends Authenticatable\n{\n", "class User extends Authenticatable\n{\n".$eventsProperty, $modelContents);
-
-            // Save the changes to the User model file
+            $modelContentsNew = str_replace("class User extends Authenticatable\n{\n", "class User extends Authenticatable\n{\n" . $eventsProperty, $modelContentsNew);
+            $modelContents = $modelContentsNew;
             file_put_contents($modelPath, $modelContents);
-
             $this->info('Changes to User model successfully added.');
         } else {
             $this->warn('The presence of the use statement for UserCreatedEvent was detected in your User Model. To avoid duplicates, no modifications were made to it. If this is unexpected, try removing the statement and re-running the install command. If the issue persists, please open a Github issue for assistance.');
