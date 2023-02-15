@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\PGP;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +10,7 @@ class Key extends Model
 {
     use HasFactory, ModelTrait;
 
-    //protected $table = 'keys'; // When commented, it will be set by the ModelTrait and use the config's table_prefix.
+    //protected $table = 'keys'; // When commented, it will be set by the ModelTrait and prepended with the config's table_prefix.
 
     protected $fillable = [
         'user_id', 'public_key', 'private_key',
