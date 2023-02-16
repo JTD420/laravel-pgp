@@ -89,7 +89,7 @@ class AuthenticationController extends Controller
     {
         $validator = $validator::make($request->all(), [
             'login' => 'required|string',
-            'password' => 'required|string|min:6'
+            'password' => 'required|string|min:6',
         ]);
 
         $prefix = config('PGP.prefix');
@@ -106,15 +106,16 @@ class AuthenticationController extends Controller
         // Attempt to log the user in
         if (Auth::attempt([
             $fieldType => $request->login,
-            'password' => $request->password
+            'password' => $request->password,
         ])) {
             // If the login is successful, redirect the user to the appropriate dashboard
             $user = Auth::user();
+
             return redirect()->route("$prefix.conversations.index");
         } else {
             // If the login is unsuccessful, redirect the user back with an error message
             return redirect()->back()->withErrors([
-                'message' => 'Login unsuccessful. Please try again.'
+                'message' => 'Login unsuccessful. Please try again.',
             ])->withInput();
         }
     }

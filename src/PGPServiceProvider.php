@@ -28,7 +28,7 @@ class PGPServiceProvider extends PackageServiceProvider
                 'create_pgp_encrypted_messages_table',
                 'create_pgp_replies_table',
                 'create_pgp_reply_recipients_table',
-            //'create_pgp_replies_table',
+                //'create_pgp_replies_table',
             )
             ->hasCommands(AddUserModelChanges::class, AddUserNameColumn::class)
             ->hasInstallCommand(function (InstallCommand $command) {

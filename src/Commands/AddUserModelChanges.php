@@ -29,11 +29,10 @@ class AddUserModelChanges extends Command
          *
          * @return void
          */
-
         $modelPath = app_path('Models/User.php');
 
         // Check if the User model file exists
-        if (!file_exists($modelPath)) {
+        if (! file_exists($modelPath)) {
             $this->error('User model file not found.');
 
             return;
@@ -42,7 +41,7 @@ class AddUserModelChanges extends Command
         // Read the contents of the User model file
         $modelContents = file_get_contents($modelPath);
 
-        if (!str_contains($modelContents, "'username'")) {
+        if (! str_contains($modelContents, "'username'")) {
             $fillableRegex = '/protected\s+\$fillable\s*=\s*\[[^\]]+\]/m';
             if (preg_match($fillableRegex, $modelContents, $matches)) {
                 $fillableArray = $matches[0];
@@ -56,7 +55,7 @@ class AddUserModelChanges extends Command
         if (strpos($modelContents, "use JTD420\PGP\Events\UserCreatedEvent;") === false) {
             $modelContentsNew = str_replace("use Laravel\Sanctum\HasApiTokens;\n", "use Laravel\Sanctum\HasApiTokens;\nuse JTD420\PGP\Events\UserCreatedEvent;\n", $modelContents);
             $eventsProperty = "\n    /**\n     * The event map for the model.\n     *\n     * @var array\n     */\n    protected \$events = [\n        'created' => UserCreatedEvent::class,\n    ];\n  \n";
-            $modelContentsNew = str_replace("class User extends Authenticatable\n{\n", "class User extends Authenticatable\n{\n" . $eventsProperty, $modelContentsNew);
+            $modelContentsNew = str_replace("class User extends Authenticatable\n{\n", "class User extends Authenticatable\n{\n".$eventsProperty, $modelContentsNew);
             $modelContents = $modelContentsNew;
             file_put_contents($modelPath, $modelContents);
             $this->info('Changes to User model successfully added.');

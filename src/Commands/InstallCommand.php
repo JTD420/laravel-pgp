@@ -30,6 +30,7 @@ class InstallCommand extends Command
     protected bool $askToRunMigrations = false;
 
     protected bool $copyServiceProviderInApp = false;
+
     protected bool $copyGravatarProviderInApp = false;
 
     protected ?string $starRepo = null;
@@ -146,8 +147,6 @@ class InstallCommand extends Command
     /**
      * Interact with the user to prompt them when the stack argument is missing.
      *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
      * @return void
      */
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -256,15 +255,14 @@ class InstallCommand extends Command
             $appConfig
         ));
 
-        file_put_contents(app_path('Providers/' . $providerName . '.php'), str_replace(
+        file_put_contents(app_path('Providers/'.$providerName.'.php'), str_replace(
             "namespace App\Providers;",
             "namespace {$namespace}\Providers;",
-            file_get_contents(app_path('Providers/' . $providerName . '.php'))
+            file_get_contents(app_path('Providers/'.$providerName.'.php'))
         ));
 
         return $this;
     }
-
 
     protected function copyGravatarProviderInApp(): self
     {
@@ -277,21 +275,20 @@ class InstallCommand extends Command
         }
 
         file_put_contents(config_path('app.php'), str_replace(
-            "Illuminate\\View\\ViewServiceProvider::class,",
-            "Illuminate\\View\\ViewServiceProvider::class," . PHP_EOL . "        " . $gravatarClass . ',',
+            'Illuminate\\View\\ViewServiceProvider::class,',
+            'Illuminate\\View\\ViewServiceProvider::class,'.PHP_EOL.'        '.$gravatarClass.',',
             $appConfig
         ));
 
         return $this;
     }
 
-
     /**
      * Replace a given string within a given file.
      *
-     * @param string $search
-     * @param string $replace
-     * @param string $path
+     * @param  string  $search
+     * @param  string  $replace
+     * @param  string  $path
      * @return void
      */
     protected function replaceInFile($search, $replace, $path)
@@ -318,7 +315,7 @@ class InstallCommand extends Command
             is_array($packages) ? $packages : func_get_args()
         );
 
-        return !(new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
+        return ! (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
             ->setTimeout(null)
             ->run(function ($type, $output) {
                 $this->output->write($output);
@@ -328,13 +325,12 @@ class InstallCommand extends Command
     /**
      * Update the "package.json" file.
      *
-     * @param callable $callback
-     * @param bool $dev
+     * @param  bool  $dev
      * @return void
      */
     protected static function updateNodePackages(callable $callback, $dev = true)
     {
-        if (!file_exists(base_path('package.json'))) {
+        if (! file_exists(base_path('package.json'))) {
             return;
         }
 
@@ -351,14 +347,14 @@ class InstallCommand extends Command
 
         file_put_contents(
             base_path('package.json'),
-            json_encode($packages, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . PHP_EOL
+            json_encode($packages, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT).PHP_EOL
         );
     }
 
     /**
      * Run the given commands.
      *
-     * @param array $commands
+     * @param  array  $commands
      * @return void
      */
     protected function runCommands($commands)
@@ -381,7 +377,6 @@ class InstallCommand extends Command
     /**
      * Remove Tailwind dark classes from the given files.
      *
-     * @param  \Symfony\Component\Finder\Finder  $finder
      * @return void
      */
     protected function removeDarkClasses(Finder $finder)

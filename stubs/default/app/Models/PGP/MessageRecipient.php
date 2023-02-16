@@ -11,7 +11,7 @@ class MessageRecipient extends Model
     use HasFactory, ModelTrait;
 
     protected $fillable = [
-        'conversation_id', 'recipient_id', 'encrypted_subject', 'encrypted_message', 'is_read'
+        'conversation_id', 'recipient_id', 'encrypted_subject', 'encrypted_message', 'is_read',
     ];
 
     public function conversation()

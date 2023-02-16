@@ -17,7 +17,6 @@ class Conversation extends Model
         'recipient_id' => 'array',
     ];
 
-
     protected $fillable = [
         'sender_id', 'recipient_id', 'sent_subject', 'sent_message',
     ];
@@ -29,7 +28,7 @@ class Conversation extends Model
 
     public function recipients()
     {
-        return $this->belongsToMany(User::class, config('PGP.table_prefix') . 'message_recipients', 'conversation_id', 'recipient_id')
+        return $this->belongsToMany(User::class, config('PGP.table_prefix').'message_recipients', 'conversation_id', 'recipient_id')
             ->withPivot('encrypted_subject', 'encrypted_message');
     }
 

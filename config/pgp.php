@@ -25,7 +25,6 @@ return [
 
     'layout_section' => 'content',
 
-
     'uses_custom_auth' => true,
 
 ];

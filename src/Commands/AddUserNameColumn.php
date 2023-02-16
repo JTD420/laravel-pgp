@@ -25,10 +25,9 @@ class AddUserNameColumn extends Command
      */
     public function handle()
     {
-        if (!Schema::hasColumn('users', 'username')) {
-            file_put_contents(base_path('database/migrations/add_username_to_users_table.php'), file_get_contents(__DIR__ . '/../../stubs/default/database/migrations/add_username_to_users_table.php.stub'));
+        if (! Schema::hasColumn('users', 'username')) {
+            file_put_contents(base_path('database/migrations/add_username_to_users_table.php'), file_get_contents(__DIR__.'/../../stubs/default/database/migrations/add_username_to_users_table.php.stub'));
 //            $this->call('php artisan migrate --path=database/migrations/add_username_to_users_table.php');
         }
     }
 }
-
