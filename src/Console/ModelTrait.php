@@ -34,4 +34,14 @@ trait ModelTrait
 
         return $this->table;
     }
+
+    /**
+     * Get the table prefix for the model.
+     *
+     * @return string
+     */
+    public function getTablePrefix()
+    {
+        return config('PGP.table_prefix');
+    }
 }
