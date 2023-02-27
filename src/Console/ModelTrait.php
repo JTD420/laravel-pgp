@@ -28,10 +28,20 @@ trait ModelTrait
         $this->table_prefix = config('PGP.table_prefix');
         $model = str::snake(class_basename($this));
 
-        if (! isset($this->table)) {
-            $this->setTable(Str::plural($this->table_prefix.$model));
+        if (!isset($this->table)) {
+            $this->setTable(Str::plural($this->table_prefix . $model));
         }
 
         return $this->table;
+    }
+
+    /**
+     * Get the table prefix for the model.
+     *
+     * @return string
+     */
+    public function getTablePrefix()
+    {
+        return config('PGP.table_prefix');
     }
 }
