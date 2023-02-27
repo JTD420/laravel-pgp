@@ -35,5 +35,4 @@ class Reply extends Model
     {
         return $this->latest()->pluck('created_at')->first();
     }
-
 }

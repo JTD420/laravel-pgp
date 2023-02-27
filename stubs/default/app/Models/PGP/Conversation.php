@@ -37,4 +37,3 @@ class Conversation extends Model
         return $this->hasMany(Reply::class, 'conversation_id')->orderBy('created_at', 'desc');
     }
 }
-

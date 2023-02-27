@@ -14,7 +14,7 @@ class MessageRecipient extends Model
     //protected $table = 'message_recipients'; // When commented, it will be set by the ModelTrait and prepended with the config's table_prefix.
 
     protected $fillable = [
-        'message_id', 'recipient_id', 'encrypted_subject', 'encrypted_message', 'is_read'
+        'message_id', 'recipient_id', 'encrypted_subject', 'encrypted_message', 'is_read',
     ];
 
     public function message()
