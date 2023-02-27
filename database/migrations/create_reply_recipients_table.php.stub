@@ -12,16 +12,15 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create(config('PGP.table_prefix') . 'message_recipients', function (Blueprint $table) {
+        Schema::create(config('PGP.table_prefix') . 'reply_recipients', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('message_id');
+            $table->unsignedBigInteger('reply_id');
             $table->unsignedBigInteger('recipient_id');
-            $table->text('encrypted_subject');
             $table->text('encrypted_message');
             $table->boolean('is_trash')->default(false);
             $table->boolean('is_read')->default(false);
             $table->timestamps();
-            $table->foreign('message_id')->references('id')->on('messages');
+            $table->foreign('reply_id')->references('id')->on('replies');
             $table->foreign('recipient_id')->references('id')->on('users');
         });
     }
@@ -33,6 +32,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists(config('PGP.table_prefix') . 'message_recipients');
+        Schema::dropIfExists(config('PGP.table_prefix') . 'reply_recipients');
     }
 };

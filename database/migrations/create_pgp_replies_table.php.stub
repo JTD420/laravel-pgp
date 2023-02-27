@@ -16,11 +16,11 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('conversation_id');
             $table->unsignedBigInteger('sender_id');
-            $table->text('sent_message');
+            $table->text('encrypted_message');
             $table->boolean('is_trash')->default(false);
             $table->boolean('is_read')->default(false);
             $table->timestamps();
-            $table->foreign('conversation_id')->references('id')->on(config('PGP.table_prefix') . 'conversations')->onDelete('cascade');
+            $table->foreign('conversation_id')->references('id')->on('messages')->onDelete('cascade');
             $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
@@ -34,5 +34,4 @@ return new class extends Migration {
     {
         Schema::dropIfExists(config('PGP.table_prefix') . 'replies');
     }
-
 };
