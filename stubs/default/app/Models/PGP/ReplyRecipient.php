@@ -11,27 +11,24 @@ class ReplyRecipient extends Model
 {
     use HasFactory, ModelTrait;
 
+    //protected $table = 'reply_recipients'; // When commented, it will be set by the ModelTrait and prepended with the config's table_prefix.
+
     protected $fillable = [
-        'conversation_id', 'recipient_id', 'recipient_reply_id',
+        'reply_id', 'recipient_id', 'encrypted_message',
     ];
 
-    public function conversation()
-    {
-        return $this->belongsTo(Conversation::class, 'conversation_id');
-    }
-
-    public function sender()
+    public function user()
     {
         return $this->belongsTo(User::class, 'recipient_id');
     }
 
-    public function recipients()
+    public function reply()
     {
-        return $this->belongsToMany(User::class, 'reply_recipients', 'reply_id', 'recipient_id')->withPivot('encrypted_message');
+        return $this->belongsTo(Reply::class);
     }
 
-    public function latestReplyTimestamp()
+    public function recipient()
     {
-        return $this->latest()->pluck('created_at')->first();
+        return $this->belongsTo(User::class, 'recipient_id');
     }
 }
