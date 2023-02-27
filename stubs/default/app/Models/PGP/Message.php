@@ -15,7 +15,6 @@ class Message extends Model
         'receiver_id' => 'array',
     ];
 
-
     protected $fillable = [
         'sender_id', 'receiver_id', 'encrypted_subject', 'encrypted_message',
     ];
