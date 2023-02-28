@@ -2,8 +2,8 @@
 
 namespace JTD420\PGP\Listeners;
 
-use App\Http\Controllers\PGPController;
-use App\Models\Key;
+use App\Http\Controllers\PGP\PGPController;
+use App\Models\PGP\Key;
 use JTD420\PGP\Events\UserCreatedEvent;
 
 class UserCreatedListener

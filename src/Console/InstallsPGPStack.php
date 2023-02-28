@@ -47,6 +47,16 @@ trait InstallsPGPStack
             );
         }
 
+        /**
+         * Adds the necessary classmap to applications composer.json for PGP to work with Laravel.
+         *
+         * @return void
+         */
+        $composerJsonPath = base_path('composer.json');
+        $composerJsonFile = json_decode(file_get_contents($composerJsonPath), true);
+        $composerJsonFile['autoload']['classmap'] = ['vendor/singpolyma/openpgp-php/lib/'];
+        file_put_contents($composerJsonPath, json_encode($composerJsonFile, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
         // Components...
         //(new Filesystem)->ensureDirectoryExists(app_path('View/Components'));
         //(new Filesystem)->copyDirectory(__DIR__.'/../../stubs/default/app/View/Components', app_path('View/Components'));
