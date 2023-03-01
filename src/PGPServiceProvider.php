@@ -23,9 +23,8 @@ class PGPServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasMigrations(
                 'create_pgp_keys_table',
-                'create_pgp_conversations_table',
+                'create_pgp_messages_table',
                 'create_pgp_message_recipients_table',
-                'create_pgp_encrypted_messages_table',
                 'create_pgp_replies_table',
                 'create_pgp_reply_recipients_table',
                 //'create_pgp_replies_table',
