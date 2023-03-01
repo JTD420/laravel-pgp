@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^8.1",
-        "illuminate/contracts": "^9.0",
+        "illuminate/contracts": ">=9.0",
         "singpolyma/openpgp-php": "^0.6.0",
         "spatie/laravel-package-tools": "^1.14.0"
     },
