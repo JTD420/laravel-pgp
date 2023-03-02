@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\PGP;
 
+use App\Http\Controllers\Controller;
 use OpenPGP;
 use OpenPGP_CompressedDataPacket;
 use OpenPGP_Crypt_RSA;

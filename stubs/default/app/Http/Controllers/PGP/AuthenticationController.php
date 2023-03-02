@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\PGP;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\PGPcontroller;
 use App\Models\PGP\Key;
 use App\Models\User;
 use Auth;
