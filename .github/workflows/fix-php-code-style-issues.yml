@@ -17,7 +17,7 @@ jobs:
           token: ${{ github.token }}
 
       - name: Fix PHP code style issues
-        uses: aglipanci/laravel-pint-action@2.1.0
+        uses: aglipanci/laravel-pint-action@2.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
